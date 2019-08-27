@@ -17,23 +17,42 @@ class StreamEdit extends React.Component {
   render() {
     if (!this.props.stream) {
       return <div>Loading...</div>;
+    } else {
+      if (this.props.userId === this.props.stream.userId) {
+        return (
+          <div>
+            <h3>Edit Stream</h3>
+            <StreamForm
+              onSubmit={this.onSubmit}
+              initialValues={_.pick(this.props.stream, "title", "description")}
+            />
+          </div>
+        );
+      } else {
+        return (
+          <div
+            style={{
+              width: "100%",
+              backgroundColor: "red",
+              textAlign: "center",
+              fontSize: "1.2em",
+              color: "white"
+            }}
+          >
+            Only the author can edit this post!
+          </div>
+        );
+      }
     }
-
-    return (
-      <div>
-        <h3>Edit Stream</h3>
-        <StreamForm
-          onSubmit={this.onSubmit}
-          initialValues={_.pick(this.props.stream, "title", "description")}
-        />
-      </div>
-    );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
+  // console.log(state);
+
   return {
-    stream: state.streams[ownProps.match.params.id]
+    stream: state.streams[ownProps.match.params.id],
+    userId: state.auth.userId
   };
 };
 
